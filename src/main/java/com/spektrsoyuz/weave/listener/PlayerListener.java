@@ -27,7 +27,7 @@ public final class PlayerListener implements Listener {
         final Player player = event.getPlayer();
         final WeavePlayer weavePlayer = plugin.getPlayerManager().loadPlayer(player);
 
-        if (!weavePlayer.isVanished()) {
+        if (weavePlayer.isVanished()) {
             event.joinMessage(null);
         }
     }
@@ -37,7 +37,7 @@ public final class PlayerListener implements Listener {
         final Player player = event.getPlayer();
         final WeavePlayer weavePlayer = plugin.getPlayerManager().getPlayer(player);
 
-        if (!weavePlayer.isVanished()) {
+        if (weavePlayer.isVanished()) {
             event.quitMessage(null);
         }
 
