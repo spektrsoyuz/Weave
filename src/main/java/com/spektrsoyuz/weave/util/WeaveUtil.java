@@ -7,10 +7,8 @@ package com.spektrsoyuz.weave.util;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,6 +26,7 @@ public class WeaveUtil {
     public static final String MESSAGE_COMMAND_VANISH_DISABLE = "<gold>Vanish has been</gold> <red>disabled</red><gold>.</gold>";
 
     public static final String MESSAGE_COMMAND_NICKNAME_VIEW = "<gold>Your current nickname is:</gold> <nickname><reset><gold>.\nSet your nickname with /nickname [nickname].</gold>";
+    public static final String MESSAGE_COMMAND_NICKNAME_EMPTY = "<gold>You do not have a nickname.\nSet your nickname with /nickname [nickname].</gold>";
     public static final String MESSAGE_COMMAND_NICKNAME_RESET = "<gold>Nickname has been reset.</gold>";
     public static final String MESSAGE_COMMAND_NICKNAME_SET = "<gold>Nickname has been set to</gold> <nickname><reset><gold>.</gold>";
 
@@ -44,15 +43,4 @@ public class WeaveUtil {
             return Tag.selfClosingInserting(Component.text(parsed));
         });
     }
-
-    public static @NotNull TagResolver legacyTag() {
-        return TagResolver.resolver("legacy", (argumentQueue, context) -> {
-            final MiniMessage mm = MiniMessage.miniMessage();
-            final String placeholder = argumentQueue.popOr("legacy tag requires an argument").value();
-            final Component legacyParsed = LegacyComponentSerializer.legacySection().deserialize(placeholder);
-            final Component parsed = mm.deserialize(mm.serialize(legacyParsed));
-            return Tag.selfClosingInserting(parsed);
-        });
-    }
-
 }

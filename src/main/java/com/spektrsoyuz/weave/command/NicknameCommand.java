@@ -49,7 +49,11 @@ public final class NicknameCommand {
 
         if (weavePlayer != null) {
             final String nickname = weavePlayer.getNickname();
-            player.sendMessage(mm.deserialize(WeaveUtil.MESSAGE_COMMAND_NICKNAME_VIEW, Placeholder.parsed("nickname", nickname), WeaveUtil.legacyTag()));
+            if (!nickname.isEmpty()) {
+                player.sendMessage(mm.deserialize(WeaveUtil.MESSAGE_COMMAND_NICKNAME_VIEW, Placeholder.parsed("nickname", nickname)));
+            } else {
+                player.sendMessage(mm.deserialize(WeaveUtil.MESSAGE_COMMAND_NICKNAME_EMPTY));
+            }
         }
         return Command.SINGLE_SUCCESS;
     }
@@ -60,7 +64,7 @@ public final class NicknameCommand {
         if (weavePlayer != null) {
             String nickname = ctx.getArgument("nickname", String.class);
             weavePlayer.setNickname(nickname);
-            player.sendMessage(mm.deserialize(WeaveUtil.MESSAGE_COMMAND_NICKNAME_SET, Placeholder.parsed("nickname", nickname), WeaveUtil.legacyTag()));
+            player.sendMessage(mm.deserialize(WeaveUtil.MESSAGE_COMMAND_NICKNAME_SET, Placeholder.parsed("nickname", nickname)));
             plugin.getPlayerManager().updatePlayer(weavePlayer);
         }
         return Command.SINGLE_SUCCESS;

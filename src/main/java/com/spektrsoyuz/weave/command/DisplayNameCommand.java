@@ -62,7 +62,7 @@ public final class DisplayNameCommand {
 
         if (weavePlayer != null) {
             final String displayName = ctx.getArgument("name", String.class);
-            final Component displayNameComponent = mm.deserialize(displayName, WeaveUtil.legacyTag());
+            final Component displayNameComponent = mm.deserialize(displayName);
             final String rawDisplayName = PlainTextComponentSerializer.plainText().serialize(displayNameComponent);
 
             if (player.getName().equals(rawDisplayName)) {
