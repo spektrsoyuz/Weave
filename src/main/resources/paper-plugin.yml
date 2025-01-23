@@ -1,0 +1,17 @@
+name: Weave
+version: '1.0'
+main: com.spektrsoyuz.weave.WeavePlugin
+description: WIP
+api-version: '1.21.4'
+load: STARTUP
+authors: [ SpektrSoyuz ]
+dependencies:
+  server:
+    CarbonChat:
+      load: AFTER
+      required: false
+      join-classpath: true
+    PlaceholderAPI:
+      load: BEFORE
+      required: false
+      join-classpath: true
