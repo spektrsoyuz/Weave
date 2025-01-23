@@ -52,7 +52,7 @@ public final class VanishCommand {
                     player.sendMessage(mm.deserialize(WeaveUtil.MESSAGE_COMMAND_VANISH_ENABLE));
                     player.removePotionEffect(PotionEffectType.INVISIBILITY);
                 }
-                weavePlayer.setVanished(vanished);
+                weavePlayer.setVanished(!vanished);
                 plugin.getPlayerManager().updatePlayer(weavePlayer);
                 return Command.SINGLE_SUCCESS;
             }
