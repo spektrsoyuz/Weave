@@ -7,14 +7,12 @@ package com.spektrsoyuz.weave.storage;
 
 import com.spektrsoyuz.weave.WeavePlugin;
 import com.spektrsoyuz.weave.player.WeavePlayer;
-import com.spektrsoyuz.weave.storage.query.WeavePlayerQuery;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.sql.*;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
 public final class DatabaseManager {
@@ -63,50 +61,45 @@ public final class DatabaseManager {
         }
     }
 
-    public CompletableFuture<Void> saveWeavePlayer(final WeavePlayer weavePlayer) {
-        return CompletableFuture.runAsync(() -> {
-            try (Connection connection = getConnection()) {
-                final PreparedStatement upsert = connection.prepareStatement("INSERT INTO " + WEAVE_PLAYERS + " (id, username, display_name, nickname, vanished) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE username = ?, display_name = ?, nickname = ?, vanished = ?;");
-                // insert
-                upsert.setString(1, weavePlayer.getMojangId().toString());
-                upsert.setString(2, weavePlayer.getUsername());
-                upsert.setString(3, weavePlayer.getDisplayName());
-                upsert.setString(4, weavePlayer.getNickname());
-                upsert.setBoolean(5, weavePlayer.isVanished());
-                // update
-                upsert.setString(6, weavePlayer.getUsername());
-                upsert.setString(7, weavePlayer.getDisplayName());
-                upsert.setString(8, weavePlayer.getNickname());
-                upsert.setBoolean(9, weavePlayer.isVanished());
-                upsert.execute();
-            } catch (SQLException e) {
-                logger.severe("Error saving weave player: " + e.getMessage());
-            }
-        });
+    public void saveWeavePlayer(final WeavePlayer weavePlayer) {
+        try (Connection connection = getConnection()) {
+            final PreparedStatement upsert = connection.prepareStatement("INSERT INTO " + WEAVE_PLAYERS + " (id, username, display_name, nickname, vanished) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE username = ?, display_name = ?, nickname = ?, vanished = ?;");
+            // insert
+            upsert.setString(1, weavePlayer.getMojangId().toString());
+            upsert.setString(2, weavePlayer.getUsername());
+            upsert.setString(3, weavePlayer.getDisplayName());
+            upsert.setString(4, weavePlayer.getNickname());
+            upsert.setBoolean(5, weavePlayer.isVanished());
+            // update
+            upsert.setString(6, weavePlayer.getUsername());
+            upsert.setString(7, weavePlayer.getDisplayName());
+            upsert.setString(8, weavePlayer.getNickname());
+            upsert.setBoolean(9, weavePlayer.isVanished());
+            upsert.execute();
+        } catch (SQLException e) {
+            logger.severe("Error saving weave player: " + e.getMessage());
+        }
     }
 
-    public CompletableFuture<WeavePlayerQuery> queryWeavePlayer(final UUID mojangId) {
-        return CompletableFuture.supplyAsync(() -> {
-            final WeavePlayerQuery query = new WeavePlayerQuery();
-            try (Connection connection = getConnection()) {
-                final PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + WEAVE_PLAYERS + " WHERE id = ?;");
-                statement.setString(1, mojangId.toString());
+    public WeavePlayer queryWeavePlayer(final UUID mojangId) {
+        WeavePlayer weavePlayer = null;
+        try (Connection connection = getConnection()) {
+            final PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + WEAVE_PLAYERS + " WHERE id = ?;");
+            statement.setString(1, mojangId.toString());
 
-                final ResultSet resultSet = statement.executeQuery();
-                while (resultSet.next()) {
-                    final String username = resultSet.getString("username");
-                    final String displayName = resultSet.getString("display_name");
-                    final String nickname = resultSet.getString("nickname");
-                    final boolean vanished = resultSet.getBoolean("vanished");
+            final ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                final String username = resultSet.getString("username");
+                final String displayName = resultSet.getString("display_name");
+                final String nickname = resultSet.getString("nickname");
+                final boolean vanished = resultSet.getBoolean("vanished");
 
-                    final WeavePlayer weavePlayer = new WeavePlayer(mojangId, username, displayName, nickname, vanished);
-                    query.addResult(weavePlayer);
-                }
-            } catch (SQLException e) {
-                logger.severe("Error querying weave player: " + e.getMessage());
+                weavePlayer = new WeavePlayer(mojangId, username, displayName, nickname, vanished);
             }
-            return query;
-        });
+        } catch (SQLException e) {
+            logger.severe("Error querying weave player: " + e.getMessage());
+        }
+        return weavePlayer;
     }
 
     public void close() {

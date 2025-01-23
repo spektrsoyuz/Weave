@@ -12,8 +12,9 @@ import com.spektrsoyuz.weave.hook.PlaceholderAPIHook;
 import com.spektrsoyuz.weave.listener.PlayerListener;
 import com.spektrsoyuz.weave.player.PlayerManager;
 import com.spektrsoyuz.weave.storage.DatabaseManager;
+import com.spektrsoyuz.weave.task.UpdatePlayersTask;
 import com.spektrsoyuz.weave.task.UpdateVanishTask;
-import com.spektrsoyuz.weave.task.UpdateWeavePlayers;
+import com.spektrsoyuz.weave.task.UpdateRedisTask;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.Bukkit;
@@ -54,8 +55,9 @@ public final class WeavePlugin extends JavaPlugin {
         new PlayerListener(this);
 
         BukkitScheduler scheduler = getServer().getScheduler();
-        scheduler.runTaskTimer(this, new UpdateVanishTask(this), 10L, 10L);
-        scheduler.runTaskTimer(this, new UpdateWeavePlayers(this), 10L, 10L);
+        scheduler.runTaskTimer(this, new UpdatePlayersTask(this), 60000L, 60000L); // update every minute
+        scheduler.runTaskTimer(this, new UpdateVanishTask(this), 10L, 10L); // update every 10ms
+        scheduler.runTaskTimer(this, new UpdateRedisTask(this), 10L, 10L); // update every 10ms
     }
 
     @Override

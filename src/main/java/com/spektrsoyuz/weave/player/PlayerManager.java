@@ -25,27 +25,27 @@ public final class PlayerManager {
     public WeavePlayer loadPlayer(final Player player) {
         final UUID mojangId = player.getUniqueId();
         final WeavePlayer existing = getPlayer(player);
+
         if (existing != null) {
             existing.setUsername(player.getName());
             updatePlayer(existing);
             return existing;
         }
 
-        final String displayName = "<gray>" + player.getName() + "</gray>";
-        final WeavePlayer weavePlayer = new WeavePlayer(mojangId, player.getName(), displayName, "", false);
-        plugin.getDatabaseManager().queryWeavePlayer(mojangId).thenAccept(weavePlayerQuery -> {
-            if (weavePlayerQuery.hasResults()) {
-                final WeavePlayer found = weavePlayerQuery.getFirst();
-                weavePlayer.setUsername(found.getUsername());
-                weavePlayer.setDisplayName(found.getDisplayName());
-                weavePlayer.setNickname(found.getNickname());
-                weavePlayer.setVanished(found.isVanished());
-            }
-        });
+        final WeavePlayer weavePlayer = new WeavePlayer(mojangId, player.getName(), "<gray>" + player.getName() + "</gray>", "", false);
+        final WeavePlayer dbPlayer = plugin.getDatabaseManager().queryWeavePlayer(mojangId);
+
+        if (dbPlayer != null) {
+            weavePlayer.setUsername(player.getName());
+            weavePlayer.setDisplayName(dbPlayer.getDisplayName());
+            weavePlayer.setNickname(dbPlayer.getNickname());
+            weavePlayer.setVanished(dbPlayer.isVanished());
+        } else {
+            plugin.getDatabaseManager().saveWeavePlayer(weavePlayer);
+        }
 
         updatePlayer(weavePlayer);
-        plugin.getDatabaseManager().saveWeavePlayer(weavePlayer);
-        return weavePlayer;
+        return getPlayer(player);
     }
 
     public WeavePlayer getPlayer(final Player player) {

@@ -9,11 +9,11 @@ import com.spektrsoyuz.weave.WeavePlugin;
 import com.spektrsoyuz.weave.player.WeavePlayer;
 import org.bukkit.entity.Player;
 
-public class UpdateWeavePlayers implements Runnable {
+public class UpdateRedisTask implements Runnable {
 
     private final WeavePlugin plugin;
 
-    public UpdateWeavePlayers(final WeavePlugin plugin) {
+    public UpdateRedisTask(final WeavePlugin plugin) {
         this.plugin = plugin;
     }
 
