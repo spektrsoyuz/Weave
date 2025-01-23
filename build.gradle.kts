@@ -23,8 +23,8 @@ repositories {
 
 dependencies {
     implementation("com.zaxxer:HikariCP:5.1.0")
+    implementation("redis.clients:jedis:5.2.0")
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
-    compileOnly("de.hexaoxi:carbonchat-api:3.0.0-beta.26")
     compileOnly("me.clip:placeholderapi:2.11.6")
 }
 
