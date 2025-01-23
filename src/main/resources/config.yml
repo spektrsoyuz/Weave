@@ -1,0 +1,22 @@
+# ----------------------------------------------------------------------------------------------------------------------
+#  Weave
+#  Created by SpektrSoyuz
+#
+#  GitHub:  https://github.com/spektrsoyuz/weave
+#  Discord: https://discord.gg/PLACEHOLDER
+#  Website: https://spektrsoyuz.com
+#
+# ----------------------------------------------------------------------------------------------------------------------
+database:
+  # Storage credentials (required for mysql)
+  host: localhost
+  port: 3306
+  database: your_database
+  username: your_username
+  password: 'your_password'
+  # Database table prefix (required)
+  table_prefix: weave
+redis:
+  host: localhost
+  port: 6379
+  password: ''

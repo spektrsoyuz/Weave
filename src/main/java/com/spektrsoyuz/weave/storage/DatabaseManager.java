@@ -12,13 +12,14 @@ public final class DatabaseManager {
 
     private final FileConfiguration config;
     private final Logger logger;
-    private final RedisManager redisManager;
     private HikariDataSource dataSource;
 
     public DatabaseManager(final WeavePlugin plugin) {
         this.config = plugin.getConfig();
         this.logger = plugin.getLogger();
-        this.redisManager = new RedisManager(plugin);
+
+        init();
+        createTables();
     }
 
     private void init() {
