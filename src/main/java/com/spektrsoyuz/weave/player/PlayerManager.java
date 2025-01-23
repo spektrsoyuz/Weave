@@ -30,7 +30,8 @@ public final class PlayerManager {
             return existing;
         }
 
-        final WeavePlayer weavePlayer = new WeavePlayer(mojangId, player.getName(), "", "", false);
+        final String displayName = "<gray>" + player.getName() + "</gray>";
+        final WeavePlayer weavePlayer = new WeavePlayer(mojangId, player.getName(), displayName, "", false);
         plugin.getDatabaseManager().queryWeavePlayer(mojangId).thenAccept(weavePlayerQuery -> {
             if (weavePlayerQuery.hasResults()) {
                 final WeavePlayer found = weavePlayerQuery.getFirst();

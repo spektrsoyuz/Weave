@@ -45,7 +45,7 @@ public final class VanishCommand {
         if (sender instanceof Player player) {
             WeavePlayer weavePlayer = plugin.getPlayerManager().getPlayer(player);
             if (weavePlayer != null) {
-                boolean vanished = !weavePlayer.isVanished();
+                boolean vanished = weavePlayer.isVanished();
                 if (vanished) {
                     player.sendMessage(mm.deserialize(WeaveUtil.MESSAGE_COMMAND_VANISH_DISABLE));
                 } else {
@@ -53,6 +53,7 @@ public final class VanishCommand {
                     player.removePotionEffect(PotionEffectType.INVISIBILITY);
                 }
                 weavePlayer.setVanished(vanished);
+                plugin.getPlayerManager().updatePlayer(weavePlayer);
                 return Command.SINGLE_SUCCESS;
             }
         } else {
