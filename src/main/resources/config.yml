@@ -21,3 +21,10 @@ redis:
   host: localhost
   port: 6379
   password: ''
+
+server:
+  # Override the vanilla join/quit message
+  join_quit_message:
+    enabled: true
+    join_message: '<green>++ <player></green>'
+    quit_message: '<red>-- <player></red>'

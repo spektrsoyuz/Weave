@@ -26,12 +26,20 @@ public final class PlayerListener implements Listener {
     public void onPlayerJoin(final PlayerJoinEvent event) {
         final Player player = event.getPlayer();
         final WeavePlayer weavePlayer = plugin.getPlayerManager().loadPlayer(player);
+
+        if (!weavePlayer.isVanished()) {
+            event.joinMessage(null);
+        }
     }
 
     @EventHandler
     public void onPlayerQuit(final PlayerQuitEvent event) {
         final Player player = event.getPlayer();
         final WeavePlayer weavePlayer = plugin.getPlayerManager().getPlayer(player);
+
+        if (!weavePlayer.isVanished()) {
+            event.quitMessage(null);
+        }
 
         plugin.getDatabaseManager().saveWeavePlayer(weavePlayer);
     }

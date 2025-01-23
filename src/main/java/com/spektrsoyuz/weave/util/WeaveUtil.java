@@ -25,8 +25,6 @@ public class WeaveUtil {
     public static final String MESSAGE_COMMAND_NICKNAME_RESET = "<gold>Nickname has been reset.</gold>";
     public static final String MESSAGE_COMMAND_NICKNAME_SET = "<gold>Nickname has been set to</gold><nickname><gold>.</gold>";
 
-    /* Config Paths */
-
     /* MiniMessage Resolvers */
     public static @NotNull TagResolver papiTag(final @NotNull Player player) {
         return TagResolver.resolver("papi", (argumentQueue, context) -> {
