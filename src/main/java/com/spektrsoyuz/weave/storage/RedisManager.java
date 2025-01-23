@@ -44,7 +44,7 @@ public final class RedisManager {
     }
 
     public void sendPlayerData(final WeavePlayer weavePlayer) {
-        final String key = "players:" + weavePlayer.getMojangId();
+        final String key = "weave_players:" + weavePlayer.getMojangId();
         final String username = "username:" + weavePlayer.getUsername();
         final String displayName = ",displayName:" + weavePlayer.getDisplayName();
         final String nickname = ",nickname:" + weavePlayer.getNickname();

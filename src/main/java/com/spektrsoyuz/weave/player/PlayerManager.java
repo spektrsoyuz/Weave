@@ -53,7 +53,7 @@ public final class PlayerManager {
     }
 
     public WeavePlayer getPlayer(final UUID mojangId) {
-        return redisManager.getPlayerData("players:" + mojangId.toString());
+        return redisManager.getPlayerData("weave_players:" + mojangId.toString());
     }
 
     public WeavePlayer getPlayer(final String playerName) {
