@@ -46,23 +46,26 @@ public final class DisplayNameCommand {
     }
 
     private int view(final CommandContext<CommandSourceStack> ctx) {
-        Player player = (Player) ctx.getSource().getSender();
-        WeavePlayer weavePlayer = plugin.getPlayerManager().getPlayer(player);
+        final Player player = (Player) ctx.getSource().getSender();
+        final WeavePlayer weavePlayer = plugin.getPlayerManager().getPlayer(player);
+
         if (weavePlayer != null) {
-            String displayName = weavePlayer.getDisplayName();
+            final String displayName = weavePlayer.getDisplayName();
             player.sendMessage(mm.deserialize(WeaveUtil.MESSAGE_COMMAND_NAME_VIEW, Placeholder.parsed("name", displayName)));
         }
         return Command.SINGLE_SUCCESS;
     }
 
     private int set(final CommandContext<CommandSourceStack> ctx) {
-        Player player = (Player) ctx.getSource().getSender();
-        WeavePlayer weavePlayer = plugin.getPlayerManager().getPlayer(player);
+        final Player player = (Player) ctx.getSource().getSender();
+        final WeavePlayer weavePlayer = plugin.getPlayerManager().getPlayer(player);
+
         if (weavePlayer != null) {
-            String displayName = ctx.getArgument("name", String.class);
-            Component displayNameComponent = mm.deserialize(displayName);
-            String rawDisplayName = PlainTextComponentSerializer.plainText().serialize(displayNameComponent);
-            if (player.getName().equalsIgnoreCase(rawDisplayName)) {
+            final String displayName = ctx.getArgument("name", String.class);
+            final Component displayNameComponent = mm.deserialize(displayName, WeaveUtil.legacyTag());
+            final String rawDisplayName = PlainTextComponentSerializer.plainText().serialize(displayNameComponent);
+
+            if (player.getName().equals(rawDisplayName)) {
                 weavePlayer.setDisplayName(displayName);
                 player.sendMessage(mm.deserialize(WeaveUtil.MESSAGE_COMMAND_NAME_SET, Placeholder.parsed("name", displayName)));
                 plugin.getPlayerManager().updatePlayer(weavePlayer);
@@ -74,8 +77,9 @@ public final class DisplayNameCommand {
     }
 
     private int reset(final CommandContext<CommandSourceStack> ctx) {
-        Player player = (Player) ctx.getSource().getSender();
-        WeavePlayer weavePlayer = plugin.getPlayerManager().getPlayer(player);
+        final Player player = (Player) ctx.getSource().getSender();
+        final WeavePlayer weavePlayer = plugin.getPlayerManager().getPlayer(player);
+
         if (weavePlayer != null) {
             final String displayName = "<gray>" + player.getName() + "</gray>";
             weavePlayer.setDisplayName(displayName);
