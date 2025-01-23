@@ -1,5 +1,12 @@
+/*
+ * Weave
+ * Created by SpektrSoyuz
+ * All Rights Reserved
+ */
 package com.spektrsoyuz.weave;
 
+import com.spektrsoyuz.weave.command.NicknameCommand;
+import com.spektrsoyuz.weave.command.VanishCommand;
 import com.spektrsoyuz.weave.hook.PlaceholderAPIHook;
 import com.spektrsoyuz.weave.listener.PlayerListener;
 import com.spektrsoyuz.weave.player.PlayerManager;
@@ -36,6 +43,9 @@ public final class WeavePlugin extends JavaPlugin {
 
         getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
             final Commands commands = event.registrar();
+
+            new NicknameCommand(this, commands);
+            new VanishCommand(this, commands);
         });
 
         new PlayerListener(this);

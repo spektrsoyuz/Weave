@@ -1,3 +1,8 @@
+/*
+ * Weave
+ * Created by SpektrSoyuz
+ * All Rights Reserved
+ */
 package com.spektrsoyuz.weave.player;
 
 import java.util.UUID;

@@ -1,3 +1,8 @@
+/*
+ * Weave
+ * Created by SpektrSoyuz
+ * All Rights Reserved
+ */
 package com.spektrsoyuz.weave.hook;
 
 import com.spektrsoyuz.weave.WeavePlugin;
