@@ -47,10 +47,10 @@ public final class VanishCommand {
             if (weavePlayer != null) {
                 boolean vanished = weavePlayer.isVanished();
                 if (vanished) {
+                    player.sendMessage(mm.deserialize(WeaveUtil.MESSAGE_COMMAND_VANISH_ENABLE));
+                } else {
                     player.sendMessage(mm.deserialize(WeaveUtil.MESSAGE_COMMAND_VANISH_DISABLE));
                     player.removePotionEffect(PotionEffectType.INVISIBILITY);
-                } else {
-                    player.sendMessage(mm.deserialize(WeaveUtil.MESSAGE_COMMAND_VANISH_ENABLE));
                 }
                 weavePlayer.setVanished(!vanished);
                 plugin.getPlayerManager().updatePlayer(weavePlayer);
