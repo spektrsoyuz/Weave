@@ -28,6 +28,6 @@ public final class PlayerListener implements Listener {
         final Player player = event.getPlayer();
         final WeavePlayer weavePlayer = plugin.getPlayerManager().getPlayer(player);
 
-        // TODO save player to database
+        plugin.getDatabaseManager().saveWeavePlayer(weavePlayer);
     }
 }
