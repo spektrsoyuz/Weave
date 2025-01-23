@@ -5,8 +5,6 @@ import com.spektrsoyuz.weave.player.WeavePlayer;
 import com.spektrsoyuz.weave.storage.query.WeavePlayerQuery;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.sql.*;
@@ -18,7 +16,6 @@ public final class DatabaseManager {
 
     private final FileConfiguration config;
     private final Logger logger;
-    private final MiniMessage mm;
     private HikariDataSource dataSource;
 
     private static final String WEAVE_PLAYERS = "weave_players";
@@ -26,7 +23,6 @@ public final class DatabaseManager {
     public DatabaseManager(final WeavePlugin plugin) {
         this.config = plugin.getConfig();
         this.logger = plugin.getLogger();
-        this.mm = MiniMessage.miniMessage();
 
         init();
         createTables();
@@ -69,12 +65,12 @@ public final class DatabaseManager {
                 // insert
                 upsert.setString(1, weavePlayer.getMojangId().toString());
                 upsert.setString(2, weavePlayer.getUsername());
-                upsert.setString(3, mm.serialize(weavePlayer.getDisplayName()));
+                upsert.setString(3, weavePlayer.getDisplayName());
                 upsert.setString(4, weavePlayer.getNickname());
                 upsert.setBoolean(5, weavePlayer.isVanished());
                 // update
                 upsert.setString(6, weavePlayer.getUsername());
-                upsert.setString(7, mm.serialize(weavePlayer.getDisplayName()));
+                upsert.setString(7, weavePlayer.getDisplayName());
                 upsert.setString(8, weavePlayer.getNickname());
                 upsert.setBoolean(9, weavePlayer.isVanished());
                 upsert.execute();
@@ -94,7 +90,7 @@ public final class DatabaseManager {
                 final ResultSet resultSet = statement.executeQuery();
                 while (resultSet.next()) {
                     final String username = resultSet.getString("username");
-                    final Component displayName = mm.deserialize(resultSet.getString("display_name"));
+                    final String displayName = resultSet.getString("display_name");
                     final String nickname = resultSet.getString("nickname");
                     final boolean vanished = resultSet.getBoolean("vanished");
 

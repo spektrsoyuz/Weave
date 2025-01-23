@@ -1,21 +1,19 @@
 package com.spektrsoyuz.weave.player;
 
-import net.kyori.adventure.text.Component;
-
 import java.util.UUID;
 
 public class WeavePlayer {
 
     private final UUID mojangId;
     private String username;
-    private Component displayName;
+    private String displayName;
     private String nickname;
     private boolean vanished;
 
     public WeavePlayer(
             final UUID mojangId,
             final String username,
-            final Component displayName,
+            final String displayName,
             final String nickname,
             final boolean vanished
     ) {
@@ -38,11 +36,11 @@ public class WeavePlayer {
         this.username = username;
     }
 
-    public Component getDisplayName() {
+    public String getDisplayName() {
         return displayName;
     }
 
-    public void setDisplayName(Component displayName) {
+    public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
 

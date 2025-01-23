@@ -2,7 +2,6 @@ package com.spektrsoyuz.weave.player;
 
 import com.spektrsoyuz.weave.WeavePlugin;
 import com.spektrsoyuz.weave.storage.RedisManager;
-import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -26,7 +25,7 @@ public final class PlayerManager {
             return existing;
         }
 
-        final WeavePlayer weavePlayer = new WeavePlayer(mojangId, player.getName(), Component.empty(), "", false);
+        final WeavePlayer weavePlayer = new WeavePlayer(mojangId, player.getName(), "", "", false);
         plugin.getDatabaseManager().queryWeavePlayer(mojangId).thenAccept(weavePlayerQuery -> {
             if (weavePlayerQuery.hasResults()) {
                 final WeavePlayer found = weavePlayerQuery.getFirst();
@@ -38,6 +37,7 @@ public final class PlayerManager {
         });
 
         updatePlayer(weavePlayer);
+        plugin.getDatabaseManager().saveWeavePlayer(weavePlayer);
         return weavePlayer;
     }
 
@@ -46,7 +46,7 @@ public final class PlayerManager {
     }
 
     public WeavePlayer getPlayer(final UUID mojangId) {
-        return redisManager.getPlayerData(mojangId.toString());
+        return redisManager.getPlayerData("players:" + mojangId.toString());
     }
 
     public void updatePlayer(final WeavePlayer weavePlayer) {

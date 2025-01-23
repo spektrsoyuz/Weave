@@ -2,8 +2,6 @@ package com.spektrsoyuz.weave.storage;
 
 import com.spektrsoyuz.weave.WeavePlugin;
 import com.spektrsoyuz.weave.player.WeavePlayer;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -13,12 +11,10 @@ import java.util.UUID;
 public final class RedisManager {
 
     private final WeavePlugin plugin;
-    private final MiniMessage mm;
     private JedisPool pool;
 
     public RedisManager(final WeavePlugin plugin) {
         this.plugin = plugin;
-        this.mm = MiniMessage.miniMessage();
 
         init();
     }
@@ -39,8 +35,8 @@ public final class RedisManager {
 
     public void sendPlayerData(final WeavePlayer weavePlayer) {
         final String key = "players:" + weavePlayer.getMojangId();
-        final String username = ",username:" + weavePlayer.getUsername();
-        final String displayName = ",displayName:" + mm.serialize(weavePlayer.getDisplayName());
+        final String username = "username:" + weavePlayer.getUsername();
+        final String displayName = ",displayName:" + weavePlayer.getDisplayName();
         final String nickname = ",nickname:" + weavePlayer.getNickname();
         final String vanished = ",vanished:" + weavePlayer.isVanished();
 
@@ -50,11 +46,11 @@ public final class RedisManager {
     public WeavePlayer getPlayerData(final String key) {
         final String value = get(key);
         if (value != null) {
-            final String[] values = get(key).split(",");
+            final String[] values = value.split(",");
             final UUID mojangId = UUID.fromString(key.split(":")[1]);
             final String username = values[0].split(":")[1];
-            final Component displayName = mm.deserialize(values[1].split(":")[1]);
-            final String nickname = values[2].split(":")[1];
+            final String displayName = values[1].split(":", -1)[1];
+            final String nickname = values[2].split(":", -1)[1];
             final boolean vanished = Boolean.parseBoolean(values[3].split(":")[1]);
 
             return new WeavePlayer(mojangId, username, displayName, nickname, vanished);
@@ -65,6 +61,7 @@ public final class RedisManager {
     private void set(final String key, final String value) {
         try (Jedis jedis = pool.getResource()) {
             jedis.set(key, value);
+            jedis.expire(key, 5);
         }
     }
 
