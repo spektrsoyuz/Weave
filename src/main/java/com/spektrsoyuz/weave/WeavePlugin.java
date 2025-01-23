@@ -5,6 +5,7 @@
  */
 package com.spektrsoyuz.weave;
 
+import com.spektrsoyuz.weave.command.DisplayNameCommand;
 import com.spektrsoyuz.weave.command.NicknameCommand;
 import com.spektrsoyuz.weave.command.VanishCommand;
 import com.spektrsoyuz.weave.hook.PlaceholderAPIHook;
@@ -45,6 +46,7 @@ public final class WeavePlugin extends JavaPlugin {
         getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
             final Commands commands = event.registrar();
 
+            new DisplayNameCommand(this, commands);
             new NicknameCommand(this, commands);
             new VanishCommand(this, commands);
         });

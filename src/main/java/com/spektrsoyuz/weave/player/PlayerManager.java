@@ -9,6 +9,7 @@ import com.spektrsoyuz.weave.WeavePlugin;
 import com.spektrsoyuz.weave.storage.RedisManager;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
 import java.util.UUID;
 
 public final class PlayerManager {
@@ -53,6 +54,19 @@ public final class PlayerManager {
 
     public WeavePlayer getPlayer(final UUID mojangId) {
         return redisManager.getPlayerData("players:" + mojangId.toString());
+    }
+
+    public WeavePlayer getPlayer(final String playerName) {
+        for (WeavePlayer weavePlayer : getPlayers()) {
+            if (weavePlayer.getUsername().equals(playerName)) {
+                return weavePlayer;
+            }
+        }
+        return null;
+    }
+
+    public Collection<WeavePlayer> getPlayers() {
+        return redisManager.getAllPlayerData();
     }
 
     public void updatePlayer(final WeavePlayer weavePlayer) {

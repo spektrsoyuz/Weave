@@ -10,7 +10,12 @@ import com.spektrsoyuz.weave.player.WeavePlayer;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.params.ScanParams;
+import redis.clients.jedis.resps.ScanResult;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 public final class RedisManager {
@@ -63,6 +68,19 @@ public final class RedisManager {
         return null;
     }
 
+    public Collection<WeavePlayer> getAllPlayerData() {
+        final List<WeavePlayer> weavePlayers = new ArrayList<>();
+        final List<String> playerKeys = getAll();
+
+        for (String key : playerKeys) {
+            final WeavePlayer weavePlayer = getPlayerData(key);
+            if (weavePlayer != null) {
+                weavePlayers.add(weavePlayer);
+            }
+        }
+        return weavePlayers;
+    }
+
     private void set(final String key, final String value) {
         try (Jedis jedis = pool.getResource()) {
             jedis.set(key, value);
@@ -73,6 +91,13 @@ public final class RedisManager {
     private String get(final String key) {
         try (Jedis jedis = pool.getResource()) {
             return jedis.get(key);
+        }
+    }
+
+    private List<String> getAll() {
+        try (Jedis jedis = pool.getResource()) {
+            final ScanResult<String> scanResult = jedis.scan("0", new ScanParams().match("players:*"));
+            return scanResult.getResult();
         }
     }
 }
