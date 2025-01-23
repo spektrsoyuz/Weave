@@ -47,7 +47,11 @@ public final class PlaceholderAPIHook extends PlaceholderExpansion {
                     return weavePlayer.getNickname();
                 }
                 case "nickname_full" -> {
-                    return "<yellow>(" + weavePlayer.getNickname() + "<reset><yellow>)</yellow> ";
+                    String nickname = weavePlayer.getNickname();
+                    if (!nickname.isEmpty()) {
+                        return "<yellow>(" + weavePlayer.getNickname() + "<reset><yellow>)</yellow> ";
+                    }
+                    return "";
                 }
             }
         }
