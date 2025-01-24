@@ -10,16 +10,22 @@ import com.spektrsoyuz.weave.storage.RedisManager;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class PlayerManager {
 
     private final WeavePlugin plugin;
     private final RedisManager redisManager;
+    private final Map<UUID, WeavePlayer> cache;
+    private final boolean useRedis;
 
     public PlayerManager(final WeavePlugin plugin) {
         this.plugin = plugin;
         this.redisManager = new RedisManager(plugin);
+        this.cache = new ConcurrentHashMap<>();
+        this.useRedis = plugin.getConfig().getBoolean("redis.enabled", false);
     }
 
     public WeavePlayer loadPlayer(final Player player) {
@@ -28,7 +34,11 @@ public final class PlayerManager {
 
         if (existing != null) {
             existing.setUsername(player.getName());
-            updatePlayer(existing);
+            if (useRedis) {
+                updatePlayer(existing);
+            } else {
+                cache.put(mojangId, existing);
+            }
             return existing;
         }
 
@@ -44,7 +54,11 @@ public final class PlayerManager {
             plugin.getDatabaseManager().saveWeavePlayer(weavePlayer);
         }
 
-        updatePlayer(weavePlayer);
+        if (useRedis) {
+            updatePlayer(weavePlayer);
+        } else {
+            cache.put(mojangId, weavePlayer);
+        }
         return getPlayer(player);
     }
 
@@ -53,7 +67,11 @@ public final class PlayerManager {
     }
 
     public WeavePlayer getPlayer(final UUID mojangId) {
-        return redisManager.getPlayerData("weave_players:" + mojangId.toString());
+        if (useRedis) {
+            return redisManager.getPlayerData("weave_players:" + mojangId.toString());
+        } else {
+            return cache.get(mojangId);
+        }
     }
 
     public WeavePlayer getPlayer(final String playerName) {
@@ -66,10 +84,18 @@ public final class PlayerManager {
     }
 
     public Collection<WeavePlayer> getPlayers() {
-        return redisManager.getAllPlayerData();
+        if (useRedis) {
+            return redisManager.getAllPlayerData();
+        } else {
+            return cache.values();
+        }
     }
 
     public void updatePlayer(final WeavePlayer weavePlayer) {
-        redisManager.sendPlayerData(weavePlayer);
+        if (useRedis) {
+            redisManager.sendPlayerData(weavePlayer);
+        } else {
+            cache.put(weavePlayer.getMojangId(), weavePlayer);
+        }
     }
 }
