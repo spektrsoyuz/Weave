@@ -11,7 +11,6 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.io.File;
 import java.sql.*;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -19,14 +18,12 @@ import java.util.logging.Logger;
 public final class DatabaseManager {
 
     private final FileConfiguration config;
-    private final File dataFolder;
     private final Logger logger;
     private HikariDataSource dataSource;
     private String playersTable;
 
     public DatabaseManager(final WeavePlugin plugin) {
         this.config = plugin.getConfig();
-        this.dataFolder = plugin.getDataFolder();
         this.logger = plugin.getLogger();
 
         init();
@@ -44,20 +41,12 @@ public final class DatabaseManager {
         final String username = config.getString("database.username");
         final String password = config.getString("database.password");
 
-        final String dbType = config.getString("database.type");
-        final boolean isMySQL = "mysql".equalsIgnoreCase(dbType);
-
-        if (isMySQL) {
-            hikariConfig.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database);
-            hikariConfig.setUsername(username);
-            hikariConfig.setPassword(password);
-            hikariConfig.addDataSourceProperty("cachePrepStmts", "true");
-            hikariConfig.addDataSourceProperty("prepStmtCacheSize", "250");
-            hikariConfig.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-        } else {
-            hikariConfig.setJdbcUrl("jdbc:sqlite:" + dataFolder.getAbsolutePath() + "/weave.db");
-            hikariConfig.setDriverClassName("org.sqlite.JDBC");
-        }
+        hikariConfig.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database);
+        hikariConfig.setUsername(username);
+        hikariConfig.setPassword(password);
+        hikariConfig.addDataSourceProperty("cachePrepStmts", "true");
+        hikariConfig.addDataSourceProperty("prepStmtCacheSize", "250");
+        hikariConfig.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
 
         hikariConfig.setMaximumPoolSize(10);
         dataSource = new HikariDataSource(hikariConfig);
