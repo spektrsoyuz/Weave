@@ -3,7 +3,7 @@ plugins {
     id("com.gradleup.shadow") version ("9.0.0-beta2")
 }
 
-group = "net.cc"
+group = "com.spektrsoyuz"
 version = "1.0"
 
 repositories {

@@ -7,10 +7,6 @@ load: STARTUP
 authors: [ SpektrSoyuz ]
 dependencies:
   server:
-    CarbonChat:
-      load: AFTER
-      required: false
-      join-classpath: true
     PlaceholderAPI:
       load: BEFORE
       required: false
