@@ -96,7 +96,7 @@ public final class RedisManager {
 
     private List<String> getAll() {
         try (Jedis jedis = pool.getResource()) {
-            final ScanResult<String> scanResult = jedis.scan("0", new ScanParams().match("players:*"));
+            final ScanResult<String> scanResult = jedis.scan("0", new ScanParams().match("weave_players:*"));
             return scanResult.getResult();
         }
     }
